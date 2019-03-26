@@ -11,8 +11,8 @@ p {
 
 header {
     background-color: cornflowerblue;
-    border-bottom: 3px solid darkturquoise;
-    color: darkturquoise;
+    border-bottom: 3px solid rgb(0, 251, 255);
+    color: rgb(0, 251, 255);
     height: 100px;
     width: 100%;
     font-size: 4.5vw;
@@ -30,8 +30,8 @@ header {
     justify-content: space-around;
     align-items: center;
     text-align: center;
-    border: 2px solid darkturquoise;
-    color: darkturquoise;
+    border: 2px solid rgb(0, 251, 255);
+    color: rgb(0, 251, 255);
     padding: 5px;
     border-radius: 40px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -47,14 +47,14 @@ h1 {
 
 input {
     font-size: 24pt;
-    border: 2px solid darkturquoise;
+    border: 2px solid rgb(0, 251, 255);
     border-radius: 20px;
     background-color: none;
 }
 
 button {
-    color: darkturquoise;
-    border: 2px solid darkturquoise;
+    color: rgb(0, 251, 255);
+    border: 2px solid rgb(0, 251, 255);
     border-radius: 40px;
     font-size: 30pt;
     background-color: cornflowerblue;

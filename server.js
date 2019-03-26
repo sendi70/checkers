@@ -84,8 +84,10 @@ var server = http.createServer(function (req, res) {
                     })
                     res.end(JSON.stringify(zalogowani))
                 })
+            } else if (req.url == "/usuwanie") {
+                zalogowani.users = []
             }
-
+            
         default:
             break;
     }

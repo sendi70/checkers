@@ -26,10 +26,8 @@ class Game {
         this.canvas()
     }
 
-    dosth() {
-        console.log("xD")
-    }
 
+    //TWORZENIE OTOCZENIA I SCENY
     canvas() {
         var x = window.innerWidth
         var y = window.innerHeight
@@ -64,21 +62,27 @@ class Game {
         this.plansza(this.scene)
     }
 
+    //TWORZENIE PLANSZY
     plansza(a) {
         var geometry = new THREE.BoxGeometry(20, 10, 20)
-        var black_material = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-            side: THREE.DoubleSide,
-            wireframe: false,
-        });
-        var white_material = new THREE.MeshBasicMaterial({
-            color: 0xff00ff,
-            side: THREE.DoubleSide,
-            wireframe: false,
-        });
+        var bright_material = [];
+        for (let i = 0; i < 6; i++) {
+            bright_material.push(new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: new THREE.TextureLoader().load('img/bright.jpg')
+            }));
+        }
 
-        var black = new THREE.Mesh(geometry, black_material);
-        var white = new THREE.Mesh(geometry, white_material);
+        var dark_material = [];
+        for (let i = 0; i < 6; i++) {
+            dark_material.push(new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: new THREE.TextureLoader().load('img/dark.jpg')
+            }));
+        }
+
+        var black = new THREE.Mesh(geometry, bright_material);
+        var dark = new THREE.Mesh(geometry, dark_material);
         var y = -70
         for (let i = 0; i < 8; i++) {
             var x = -70
@@ -87,7 +91,7 @@ class Game {
                     var clone = black.clone()
                     clone.position.set(x, 0, y)
                 } else {
-                    var clone = white.clone()
+                    var clone = dark.clone()
                     clone.position.set(x, 0, y)
                 }
                 x += 20
@@ -97,14 +101,25 @@ class Game {
         }
     }
 
+    //TWORZENIE PIONKOW
     pion() {
         var geometry = new THREE.CylinderGeometry(8, 8, 5, 100)
-        var black_material = new THREE.MeshBasicMaterial({
-            color: 0x000000,
-        });
-        var white_material = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-        });
+
+        var black_material = [];
+        for (let i = 0; i < 6; i++) {
+            black_material.push(new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: new THREE.TextureLoader().load('img/black.jpg')
+            }));
+        }
+
+        var white_material = [];
+        for (let i = 0; i < 6; i++) {
+            white_material.push(new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: new THREE.TextureLoader().load('img/white.jpg')
+            }));
+        }
 
         var black = new THREE.Mesh(geometry, black_material);
         var white = new THREE.Mesh(geometry, white_material);
@@ -114,10 +129,10 @@ class Game {
             for (let j = 0; j < 8; j++) {
                 if (this.pionki[i][j] == 2) {
                     var clone = black.clone()
-                    clone.position.set(x, 10, y)
+                    clone.position.set(x, 8, y)
                 } else if (this.pionki[i][j] == 1) {
                     var clone = white.clone()
-                    clone.position.set(x, 10, y)
+                    clone.position.set(x, 8, y)
                 }
                 x += 20
                 this.scene.add(clone)
@@ -125,6 +140,8 @@ class Game {
             y += 20
         }
     }
+
+    //ZMIANA PERSPEKTYWY W ZALEZNOSCI OD GRACZA
     camera_change(a) {
         this.camera.position.set(0, 80, 120 * a)
         this.camera.lookAt(this.scene.position);

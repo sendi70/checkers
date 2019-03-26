@@ -9,6 +9,8 @@ class Net {
     dosth() {
         console.log("xD")
     }
+
+    //LOGOWANIE
     zaloguj() {
         console.log($("#nick").val())
         $.ajax({
@@ -41,6 +43,20 @@ class Net {
                         $('#uwagi').text("Witaj " + obj.users[0].nick + " twój kolor to: " + color)
                         break;
                 }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr);
+            },
+        });
+    }
+
+    //RESETOWANIE GRACZY
+    reset() {
+        $.ajax({
+            url: "usuwanie",
+            type: "POST",
+            success: function (data) {
+                console.log("Usunąłem")
             },
             error: function (xhr, status, error) {
                 console.log(xhr);
