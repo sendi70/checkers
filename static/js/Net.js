@@ -2,16 +2,20 @@ console.log("wczytano plik Net.js")
 class Net {
 
     constructor() {
-        this.a = 0 // użycie zmiennych
-        this.b = "biały"
         console.log("konstruktor klasy Net")
-    }
+        ui.clicks(this)
 
+    }
+    dosth() {
+        console.log("xD")
+    }
     zaloguj() {
         console.log($("#nick").val())
         $.ajax({
             url: "logowanie",
-            data: { nick: $("#nick").val() },
+            data: {
+                nick: $("#nick").val()
+            },
             type: "POST",
             success: function (data) {
                 var that = this
@@ -24,11 +28,17 @@ class Net {
                         $('#uwagi').text("W grze jest za dużo graczy!")
                         break;
                     case 'dodano użytkownika':
-                        console.log(that.b)
+                        if (obj.color == 1) {
+                            var color = "biały"
+                            game.pion()
+                            game.camera_change(obj.color)
+                        } else {
+                            var color = "czarny"
+                            game.pion()
+                            game.camera_change(obj.color * (-0.5))
+                        }
                         $("#logowanie").css("display", "none")
-                        if (this.a % 2 != 0)
-                            this.b = 'czarny'
-                        $('#uwagi').text("Witaj " + obj.users[0].nick + " twój kolor to: " + this.b)
+                        $('#uwagi').text("Witaj " + obj.users[0].nick + " twój kolor to: " + color)
                         break;
                 }
             },

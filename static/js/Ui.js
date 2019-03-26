@@ -6,8 +6,8 @@ class Ui {
         console.log("konstruktor klasy Ui")
 
     }
-    clicks() {
+    clicks(a) {
         console.log("Włączam clicki")
-        $("#zaloguj").on("click", net.zaloguj)
+        $("#zaloguj").on("click", a.zaloguj)
     }
 }
