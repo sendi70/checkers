@@ -4,7 +4,6 @@ var qs = require("querystring")
 var zalogowani = {
     users: []
 }
-var users = []
 
 var server = http.createServer(function (req, res) {
     console.log(req.url)
@@ -68,7 +67,6 @@ var server = http.createServer(function (req, res) {
                 })
                 req.on("end", function () {
                     var nick = qs.parse(dane)
-                    var nick2 = nick.nick
                     if (zalogowani.users.length == 2)
                         zalogowani.akcja = "Za dużo użytkowników"
                     else if (zalogowani.users.findIndex(x => x.nick == nick.nick) != -1)
@@ -87,7 +85,7 @@ var server = http.createServer(function (req, res) {
             } else if (req.url == "/usuwanie") {
                 zalogowani.users = []
             }
-            
+
         default:
             break;
     }

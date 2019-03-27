@@ -103,39 +103,24 @@ class Game {
 
     //TWORZENIE PIONKOW
     pion() {
-        var geometry = new THREE.CylinderGeometry(8, 8, 5, 100)
 
-        var black_material = [];
-        for (let i = 0; i < 6; i++) {
-            black_material.push(new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
-                map: new THREE.TextureLoader().load('img/black.jpg')
-            }));
-        }
-
-        var white_material = [];
-        for (let i = 0; i < 6; i++) {
-            white_material.push(new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
-                map: new THREE.TextureLoader().load('img/white.jpg')
-            }));
-        }
-
-        var black = new THREE.Mesh(geometry, black_material);
-        var white = new THREE.Mesh(geometry, white_material);
         var y = -70
         for (let i = 0; i < 8; i++) {
             var x = -70
             for (let j = 0; j < 8; j++) {
+                var pionek = new Pionek()
                 if (this.pionki[i][j] == 2) {
-                    var clone = black.clone()
-                    clone.position.set(x, 8, y)
+                    pionek.color = "black"
+                    pionek.position_x = x
+                    pionek.position_y = y
                 } else if (this.pionki[i][j] == 1) {
-                    var clone = white.clone()
-                    clone.position.set(x, 8, y)
+                    pionek.color = "white"
+                    pionek.position_x = x
+                    pionek.position_y = y
                 }
+                console.log(pionek.pioneczek)
                 x += 20
-                this.scene.add(clone)
+                this.scene.add(pionek.pioneczek)
             }
             y += 20
         }
