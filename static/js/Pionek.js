@@ -10,16 +10,20 @@ class Pionek {
         this.materialy()
     }
 
-
+    //USTAWIAM KOLOR
     set col(color) {
         this._color = color
     }
+    //USTAWIAM POZYCJE
     set position_x(x) {
         this._x = x
     }
+    //USTAWIAM POZYCJE
     set position_y(y) {
         this._y = y
     }
+
+    //ZWRACAM PIONEK
     get pioneczek() {
 
         if (this.color == "white") {
@@ -36,7 +40,7 @@ class Pionek {
 
     }
 
-
+    //WYPELNIAM TEKSTURY
     materialy() {
         for (let i = 0; i < 6; i++) {
             this.black_material.push(new THREE.MeshBasicMaterial({

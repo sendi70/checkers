@@ -32,7 +32,6 @@ class Net {
                     case 'dodano użytkownika':
                         if (obj.color == 1) {
                             var color = "biały"
-                            console.log("bialy")
                             game.pion()
                             game.camera_change(obj.color)
                         } else {
@@ -51,6 +50,9 @@ class Net {
         });
     }
 
+    waiting() {
+        console.log("Czekam")
+    }
     //RESETOWANIE GRACZY
     reset() {
         $.ajax({

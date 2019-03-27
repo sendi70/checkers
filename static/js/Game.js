@@ -113,14 +113,16 @@ class Game {
                     pionek.color = "black"
                     pionek.position_x = x
                     pionek.position_y = y
+                    this.scene.add(pionek.pioneczek)
                 } else if (this.pionki[i][j] == 1) {
                     pionek.color = "white"
                     pionek.position_x = x
                     pionek.position_y = y
+                    this.scene.add(pionek.pioneczek)
                 }
                 console.log(pionek.pioneczek)
                 x += 20
-                this.scene.add(pionek.pioneczek)
+
             }
             y += 20
         }
