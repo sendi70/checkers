@@ -3,6 +3,8 @@ console.log("Wczytano plik Game.js")
 class Game {
     constructor() {
         this.camera;
+        this.raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
+        this.mouseVector = new THREE.Vector2() // ten wektor
         this.szachownica = [
             [1, 0, 1, 0, 1, 0, 1, 0],
             [0, 1, 0, 1, 0, 1, 0, 1],
@@ -24,6 +26,7 @@ class Game {
             [0, 1, 0, 1, 0, 1, 0, 1],
         ];
         this.canvas()
+        this.raycast()
     }
 
 
@@ -109,6 +112,7 @@ class Game {
             var x = -70
             for (let j = 0; j < 8; j++) {
                 var pionek = new Pionek()
+                console.log(pionek)
                 if (this.pionki[i][j] == 2) {
                     pionek.color = "black"
                     pionek.position_x = x
@@ -132,5 +136,19 @@ class Game {
     camera_change(a) {
         this.camera.position.set(0, 80, 120 * a)
         this.camera.lookAt(this.scene.position);
+    }
+
+    raycast() {
+        var that = this
+        $(document).mousedown(function (event) {
+            that.raycaster.setFromCamera(that.mouseVector, that.camera);
+            var intersects = that.raycaster.intersectObjects(that.scene.children);
+
+            console.log(intersects.length)
+            if (intersects.length > 0) {
+                intersects[0].object.setClearColor = "#ff0000"
+            }
+
+        })
     }
 }

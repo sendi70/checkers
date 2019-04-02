@@ -32,10 +32,12 @@ class Net {
                     case 'dodano użytkownika':
                         if (obj.color == 1) {
                             var color = "biały"
+                            net.waiting()
                             game.pion()
                             game.camera_change(obj.color)
                         } else {
                             var color = "czarny"
+                            net.waiting()
                             game.pion()
                             game.camera_change(obj.color * (-0.5))
                         }
@@ -51,7 +53,29 @@ class Net {
     }
 
     waiting() {
-        console.log("Czekam")
+        var myInterval = setInterval(function () {
+            $.ajax({
+                url: "wait",
+                data: {
+                    nick: $("#nick").val()
+                },
+                type: "POST",
+                success: function (data) {
+                    var obj = JSON.parse(data)
+                    console.log(obj)
+                    if (obj == 1) {
+                        $("#overlay").css("display", "block")
+                    } else {
+                        clearInterval(myInterval)
+                        $("#overlay").css("display", "none")
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr);
+                },
+            });
+        }, 500)
+
     }
     //RESETOWANIE GRACZY
     reset() {

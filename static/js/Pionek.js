@@ -1,5 +1,6 @@
-class Pionek {
+class Pionek extends THREE.Mesh {
     constructor() {
+        super()
         this._color = ""
         this._x = 0
         this._y = 0
