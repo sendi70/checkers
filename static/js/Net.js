@@ -32,12 +32,12 @@ class Net {
                     case 'dodano użytkownika':
                         if (obj.color == 1) {
                             var color = "biały"
-                            net.waiting()
+                            //net.waiting()
                             game.pion()
                             game.camera_change(obj.color)
                         } else {
                             var color = "czarny"
-                            net.waiting()
+                            //net.waiting()
                             game.pion()
                             game.camera_change(obj.color * (-0.5))
                         }
@@ -56,9 +56,6 @@ class Net {
         var myInterval = setInterval(function () {
             $.ajax({
                 url: "wait",
-                data: {
-                    nick: $("#nick").val()
-                },
                 type: "POST",
                 success: function (data) {
                     var obj = JSON.parse(data)

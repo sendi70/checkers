@@ -2,9 +2,11 @@ console.log("Wczytano plik Game.js")
 
 class Game {
     constructor() {
+        this.gracz = null
         this.camera;
         this.raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
         this.mouseVector = new THREE.Vector2() // ten wektor
+        this.choose_material = []
         this.szachownica = [
             [1, 0, 1, 0, 1, 0, 1, 0],
             [0, 1, 0, 1, 0, 1, 0, 1],
@@ -72,7 +74,8 @@ class Game {
         for (let i = 0; i < 6; i++) {
             bright_material.push(new THREE.MeshBasicMaterial({
                 side: THREE.DoubleSide,
-                map: new THREE.TextureLoader().load('img/bright.jpg')
+                map: new THREE.TextureLoader().load('img/bright.jpg'),
+                name: "bright"
             }));
         }
 
@@ -80,7 +83,15 @@ class Game {
         for (let i = 0; i < 6; i++) {
             dark_material.push(new THREE.MeshBasicMaterial({
                 side: THREE.DoubleSide,
-                map: new THREE.TextureLoader().load('img/dark.jpg')
+                map: new THREE.TextureLoader().load('img/dark.jpg'),
+                name: "dark"
+            }));
+        }
+        for (let i = 0; i < 3; i++) {
+            this.choose_material.push(new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: new THREE.TextureLoader().load('img/red.jpg')
+
             }));
         }
 
@@ -92,9 +103,11 @@ class Game {
             for (let j = 0; j < 8; j++) {
                 if (this.szachownica[i][j] == 1) {
                     var clone = black.clone()
+                    clone.name = "" + i + j
                     clone.position.set(x, 0, y)
                 } else {
                     var clone = dark.clone()
+                    clone.name = "" + i + j
                     clone.position.set(x, 0, y)
                 }
                 x += 20
@@ -134,21 +147,57 @@ class Game {
 
     //ZMIANA PERSPEKTYWY W ZALEZNOSCI OD GRACZA
     camera_change(a) {
+        this.gracz = a
+        console.log(this.gracz)
         this.camera.position.set(0, 80, 120 * a)
         this.camera.lookAt(this.scene.position);
     }
 
     raycast() {
         var that = this
+        var zaznaczony = null
         $(document).mousedown(function (event) {
+            that.mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
+            that.mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
             that.raycaster.setFromCamera(that.mouseVector, that.camera);
             var intersects = that.raycaster.intersectObjects(that.scene.children);
-
-            console.log(intersects.length)
             if (intersects.length > 0) {
-                intersects[0].object.setClearColor = "#ff0000"
+                console.log(intersects[0].object);
+                if (intersects[0].object.geometry.type == "CylinderGeometry") {
+                    console.log(zaznaczony)
+                    if (that.gracz != 1 && intersects[0].object.name == "black") {
+                        intersects[0].object.material = new THREE.MeshBasicMaterial({
+                            side: THREE.DoubleSide,
+                            map: new THREE.TextureLoader().load('img/red.jpg')
+                        });
+                        if (zaznaczony != undefined) {
+                            zaznaczony.material = pionek.black_material
+                        }
+                        zaznaczony = intersects[0].object
+                    } else if (that.gracz == 1 && intersects[0].object.name == "white") {
+                        intersects[0].object.material = new THREE.MeshBasicMaterial({
+                            side: THREE.DoubleSide,
+                            map: new THREE.TextureLoader().load('img/red.jpg')
+                        });
+                        if (zaznaczony != undefined) {
+                            zaznaczony.material = pionek.white_material
+                        }
+                        zaznaczony = intersects[0].object
+                    }
+                }
+            }
+            if (intersects[0].object.geometry.type == "BoxGeometry" && zaznaczony != undefined && intersects[0].object.material[0].name == "bright") {
+                console.log(zaznaczony)
+                var x = intersects[0].object.position.x
+                var y = zaznaczony.position.y
+                var z = intersects[0].object.position.z
+                console.log(x, 0, z)
+                zaznaczony.position.set(x, y, z)
+                console.log(zaznaczony)
             }
 
         })
+
     }
+
 }

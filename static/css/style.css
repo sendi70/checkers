@@ -11,6 +11,8 @@ p {
 
 header {
     background-color: cornflowerblue;
+    position: fixed;
+    top:0;
     border-bottom: 3px solid rgb(0, 251, 255);
     color: rgb(0, 251, 255);
     height: 100px;
