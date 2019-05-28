@@ -24,20 +24,30 @@ class Pionek extends THREE.Mesh {
     set position_y(y) {
         this._y = y
     }
+    get y() {
+        return this._y
+    }
+    get x() {
+        return this._x
+    }
 
     //ZWRACAM PIONEK
     get pioneczek() {
 
         if (this.color == "white") {
             var white = new THREE.Mesh(this.geometry, this.white_material);
-            white.position.set(this._x, 8, this._y)
+            white.position.set(-70 + this._x * 20, 8, -70 + this._y * 20)
             white.name = "white"
+            white.x = this.x
+            white.y = this.y
             return white
         }
         if (this.color == "black") {
             var black = new THREE.Mesh(this.geometry, this.black_material);
-            black.position.set(this._x, 8, this._y)
+            black.position.set(-70 + this._x * 20, 8, -70 + this._y * 20)
             black.name = "black"
+            black.x = this.x
+            black.y = this.y
             return black
         }
         // return this._marka.toUpperCase()

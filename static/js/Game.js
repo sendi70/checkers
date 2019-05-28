@@ -2,6 +2,7 @@ console.log("Wczytano plik Game.js")
 
 class Game {
     constructor() {
+        this.scene = null
         this.gracz = null
         this.camera;
         this.raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
@@ -27,8 +28,9 @@ class Game {
             [1, 0, 1, 0, 1, 0, 1, 0],
             [0, 1, 0, 1, 0, 1, 0, 1],
         ];
+        this.pionkiTab = [];
         this.canvas()
-        this.raycast()
+        //this.raycast()
     }
 
 
@@ -47,8 +49,8 @@ class Game {
         this.camera.lookAt(this.scene.position);
         var renderer = new THREE.WebGLRenderer();
         renderer.setClearColor(0x252525);
-        var axes = new THREE.AxesHelper(1000)
-        this.scene.add(axes)
+        //var axes = new THREE.AxesHelper(1000)
+        //this.scene.add(axes)
         $("#root").append(renderer.domElement)
         var that = this
 
@@ -97,32 +99,36 @@ class Game {
 
         var black = new THREE.Mesh(geometry, bright_material);
         var dark = new THREE.Mesh(geometry, dark_material);
-        var y = -70
+        var y = 0
         for (let i = 0; i < 8; i++) {
-            var x = -70
+            var x = 0
             for (let j = 0; j < 8; j++) {
                 if (this.szachownica[i][j] == 1) {
                     var clone = black.clone()
                     clone.name = "" + i + j
-                    clone.position.set(x, 0, y)
+                    clone.x = x
+                    clone.y = y
+                    clone.position.set(-70 + x * 20, 0, -70 + y * 20)
                 } else {
                     var clone = dark.clone()
                     clone.name = "" + i + j
-                    clone.position.set(x, 0, y)
+                    clone.x = x
+                    clone.y = y
+                    clone.position.set(-70 + x * 20, 0, -70 + y * 20)
                 }
-                x += 20
+                x += 1
                 a.add(clone)
             }
-            y += 20
+            y += 1
         }
     }
 
     //TWORZENIE PIONKOW
     pion() {
-
-        var y = -70
+        this.raycast()
+        var y = 0
         for (let i = 0; i < 8; i++) {
-            var x = -70
+            var x = 0
             for (let j = 0; j < 8; j++) {
                 var pionek = new Pionek()
                 console.log(pionek)
@@ -130,18 +136,21 @@ class Game {
                     pionek.color = "black"
                     pionek.position_x = x
                     pionek.position_y = y
+                    this.pionkiTab.push(pionek.pioneczek)
                     this.scene.add(pionek.pioneczek)
                 } else if (this.pionki[i][j] == 1) {
                     pionek.color = "white"
                     pionek.position_x = x
                     pionek.position_y = y
                     this.scene.add(pionek.pioneczek)
+                    this.pionkiTab.push(pionek.pioneczek)
                 }
+                //this.pionkiTab[i][j] = null
                 console.log(pionek.pioneczek)
-                x += 20
+                x += 1
 
             }
-            y += 20
+            y += 1
         }
     }
 
@@ -162,7 +171,7 @@ class Game {
             that.raycaster.setFromCamera(that.mouseVector, that.camera);
             var intersects = that.raycaster.intersectObjects(that.scene.children);
             if (intersects.length > 0) {
-                console.log(intersects[0].object);
+                console.log(intersects[0].object.y);
                 if (intersects[0].object.geometry.type == "CylinderGeometry") {
                     console.log(zaznaczony)
                     if (that.gracz != 1 && intersects[0].object.name == "black") {
@@ -172,6 +181,7 @@ class Game {
                         });
                         if (zaznaczony != undefined) {
                             zaznaczony.material = pionek.black_material
+                            zaznaczony = undefined
                         }
                         zaznaczony = intersects[0].object
                     } else if (that.gracz == 1 && intersects[0].object.name == "white") {
@@ -181,6 +191,7 @@ class Game {
                         });
                         if (zaznaczony != undefined) {
                             zaznaczony.material = pionek.white_material
+                            zaznaczony = undefined
                         }
                         zaznaczony = intersects[0].object
                     }
@@ -188,16 +199,48 @@ class Game {
             }
             if (intersects[0].object.geometry.type == "BoxGeometry" && zaznaczony != undefined && intersects[0].object.material[0].name == "bright") {
                 console.log(zaznaczony)
-                var x = intersects[0].object.position.x
-                var y = zaznaczony.position.y
-                var z = intersects[0].object.position.z
+                var x = intersects[0].object.x
+                var y = 8
+                var z = intersects[0].object.y
                 console.log(x, 0, z)
-                zaznaczony.position.set(x, y, z)
-                console.log(zaznaczony)
+                zaznaczony.position.set(-70 + x * 20, y, -70 + z * 20)
+                that.pionki[zaznaczony.y][zaznaczony.x] = 0
+                zaznaczony.x = x
+                zaznaczony.y = z
+                if (zaznaczony.name == "white") {
+                    that.pionki[zaznaczony.y][zaznaczony.x] = 1
+                    zaznaczony.material = pionek.white_material
+                } else {
+                    zaznaczony.material = pionek.black_material
+                    that.pionki[zaznaczony.y][zaznaczony.x] = 2
+                }
+                zaznaczony = undefined
+                console.log(that.pionki)
+                document.getElementById("tablica").innerHTML = ""
+                for (let i = 0; i < 8; i++) {
+                    for (let j = 0; j < 8; j++) {
+                        document.getElementById("tablica").innerHTML += that.pionki[i][j] + "  "
+                    }
+                    document.getElementById("tablica").innerHTML += '</br>'
+                }
+                net.aktualizuj(that.pionki)
             }
 
         })
 
+    }
+    odliczaj(n) {
+        n--;
+        var s = n % 60;
+        var m = Math.floor((n % 3600) / 60);
+        var g = Math.floor(n / 3600);
+        if (n == 0) {
+            document.getElementById('zegar').innerHTML = '';
+        } else {
+            document.getElementById('zegar').innerHTML = '' + g + ':' + ((m < 10) ? '0' + m : m) + ':' + ((s < 10) ? '0' + s : s);
+            if (n >= 0)
+                setTimeout("odliczaj(" + n + ")", 1000);
+        }
     }
 
 }

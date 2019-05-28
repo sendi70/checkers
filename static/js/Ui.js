@@ -12,6 +12,6 @@ class Ui {
         console.log("Włączam clicki")
         $("#zaloguj").on("click", a.zaloguj)
         $("#reset").on("click", a.reset)
-        
+
     }
 }

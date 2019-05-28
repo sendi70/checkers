@@ -4,6 +4,29 @@ var qs = require("querystring")
 var zalogowani = {
     users: []
 }
+var pionkiTab = [
+    [2, 0, 2, 0, 2, 0, 2, 0],
+    [0, 2, 0, 2, 0, 2, 0, 2],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+]
+var orginalTab = [
+    [2, 0, 2, 0, 2, 0, 2, 0],
+    [0, 2, 0, 2, 0, 2, 0, 2],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+]
+pionkiTab = JSON.stringify(pionkiTab)
+var newTab = []
+var time = 30
 
 var server = http.createServer(function (req, res) {
     console.log(req.url)
@@ -84,14 +107,49 @@ var server = http.createServer(function (req, res) {
                 })
             } else if (req.url == "/usuwanie") {
                 zalogowani.users = []
+                pionkiTab = JSON.stringify(orginalTab)
             }
             if (req.url == "/wait") {
                 res.end(JSON.stringify(zalogowani.users.length))
                 //res.end(zalogowani.users.length)
             }
+            if (req.url == "/aktualizacja") {
+                console.log("aktualizuje")
+                time = 30
+                var dane = ""
+                req.on("data", function (data) {
+                    dane += data
+                })
+                req.on("end", function () {
+                    dane = qs.parse(dane)
+                    newTab = dane.pionki
+                    //console.log(JSON.parse(dane))
+                    console.log(newTab)
+                    res.end("start")
+                })
+                //res.end(zalogowani.users.length)
+            }
+            if (req.url == "/porownaj") {
+                if (pionkiTab === newTab) {
+                    temp = {
+                        'akcja': "rowne",
+                        'czas': time
+                    }
+                    res.end(JSON.stringify(temp))
+                } else {
+                    pionkiTab = newTab
+                    temp = {
+                        'akcja': "ruch",
+                        'tablica': pionkiTab
+                    }
+                    console.log(temp)
+                    res.end(JSON.stringify(temp))
+                }
 
-        default:
-            break;
+            }
+
+            default:
+                break;
     }
 })
 
